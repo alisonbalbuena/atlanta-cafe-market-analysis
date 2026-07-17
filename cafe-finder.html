@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cafe Finder — Gwinnett & Atlanta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --espresso:#2B1B12;
+    --cream:#F7F0E4;
+    --parchment:#EDE2CE;
+    --gold:#C08A3E;
+    --sage:#6B7A5E;
+    --clay:#B4553A;
+    --line:#DDCBAA;
+    --ink:#33261C;
+    --muted:#8C7A63;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:36px 24px 80px;}
+
+  header{margin-bottom:28px;}
+  .eyebrow{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:10px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:40px;
+    line-height:1.08;
+    margin:0 0 10px;
+    color:var(--espresso);
+  }
+  .sub{
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.55;
+    max-width:560px;
+  }
+  .disclaimer{
+    margin-top:14px;
+    font-size:12.5px;
+    color:var(--muted);
+    background:var(--parchment);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 14px;
+    line-height:1.5;
+  }
+  .disclaimer b{color:var(--ink);}
+
+  .panel{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px;
+    margin-top:28px;
+  }
+  .panel h2{
+    font-family:'Fraunces',serif;
+    font-size:18px;
+    font-weight:600;
+    margin:0 0 18px;
+    color:var(--espresso);
+  }
+
+  .row{margin-bottom:20px;}
+  .row:last-child{margin-bottom:0;}
+  label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+
+  select, .chip-group{width:100%;}
+  select{
+    width:100%;
+    padding:11px 14px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:var(--cream);
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    color:var(--ink);
+    appearance:none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238C7A63' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+  }
+
+  .slider-row{display:flex;align-items:center;gap:14px;}
+  input[type=range]{
+    flex:1;
+    -webkit-appearance:none;
+    height:5px;
+    border-radius:3px;
+    background: linear-gradient(90deg, var(--sage), var(--parchment) 50%, var(--clay));
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:20px;height:20px;border-radius:50%;
+    background:var(--espresso);
+    border:3px solid #fff;
+    box-shadow:0 1px 4px rgba(0,0,0,.35);
+    cursor:pointer;
+    margin-top:-1px;
+  }
+  .slider-labels{
+    display:flex;justify-content:space-between;
+    font-size:11.5px;color:var(--muted);margin-top:8px;
+  }
+  .slider-labels span:first-child{color:var(--sage);font-weight:600;}
+  .slider-labels span:last-child{color:var(--clay);font-weight:600;}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;}
+  .chip{
+    padding:9px 16px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--cream);
+    font-size:13px;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--ink);
+    transition:.15s;
+  }
+  .chip:hover{border-color:var(--gold);}
+  .chip.active{
+    background:var(--espresso);
+    border-color:var(--espresso);
+    color:var(--cream);
+  }
+
+  .results-head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    margin:34px 0 16px;
+  }
+  .results-head h2{
+    font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin:0;
+    color:var(--espresso);
+  }
+  .count{font-size:13px;color:var(--muted);}
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    align-items:center;
+  }
+  .card-left{flex:1;min-width:0;}
+  .card-name{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:17px;
+    color:var(--espresso);
+    margin:0 0 4px;
+  }
+  .card-meta{font-size:12.5px;color:var(--muted);margin-bottom:8px;}
+  .card-tags{display:flex;gap:6px;flex-wrap:wrap;}
+  .tag{
+    font-size:11px;font-weight:600;letter-spacing:.02em;
+    padding:3px 9px;border-radius:12px;
+  }
+  .tag.cozy{background:#E8EDE2;color:var(--sage);}
+  .tag.lively{background:#F4E1DA;color:var(--clay);}
+  .tag.rating{background:var(--parchment);color:var(--espresso);}
+
+  .card-right{
+    text-align:right;
+    flex-shrink:0;
+    min-width:76px;
+  }
+  .score{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    font-weight:600;
+    color:var(--gold);
+    line-height:1;
+  }
+  .score-label{
+    font-size:10px;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.05em;margin-top:4px;
+  }
+
+  .empty{
+    text-align:center;padding:50px 20px;color:var(--muted);font-size:14px;
+  }
+
+  footer{
+    margin-top:40px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.6;
+  }
+
+  @media (max-width:560px){
+    h1{font-size:30px;}
+    .card{flex-direction:column;align-items:flex-start;}
+    .card-right{text-align:left;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Cafe Market Project · Part 2</div>
+    <h1>Find your cafe.</h1>
+    <p class="sub">Built on the same 116-cafe dataset from the Gwinnett County & Atlanta market analysis. Pick a location and a vibe, and get ranked recommendations.</p>
+    <p class="sub" style="margin-top:6px;font-weight:600;color:var(--espresso);">By: Alison Balbuena</p>
+    <div class="disclaimer">
+      <b>How this works:</b> there's no review-text data available in this dataset, so categories like "Study/Lock In" or "Coffee Chats" are inferred, not confirmed. Sweet Treats comes from matching bakery/dessert-style keywords in the cafe name. The others are estimated from review volume relative to nearby cafes (quieter → better for studying, moderate traffic + high rating → good for chats, high traffic → social hangout spot). Treat these as reasonable starting guesses, not guarantees — actual seating, wifi, and noise level aren't in this data.
+    </div>
+  </header>
+
+  <div class="panel">
+    <h2>What are you looking for?</h2>
+
+    <div class="row">
+      <label for="region">Area</label>
+      <select id="region">
+        <option value="all">All areas</option>
+        <option value="Gwinnett">Gwinnett County (Duluth, Suwanee, Norcross, Lawrenceville)</option>
+        <option value="Atlanta">Atlanta (Midtown, Decatur, Emory Village, and nearby)</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label for="neighborhood">Neighborhood</label>
+      <select id="neighborhood">
+        <option value="all">Any neighborhood</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label for="landmark">Near</label>
+      <select id="landmark">
+        <option value="none">No preference</option>
+        <option value="gt">Georgia Tech</option>
+        <option value="emory">Emory University</option>
+        <option value="duluth">Duluth (home)</option>
+        <option value="me">My current location</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label>Perfect for</label>
+      <div class="chips" id="categoryChips">
+        <div class="chip active" data-val="all">Any</div>
+        <div class="chip" data-val="study">Study / Lock In</div>
+        <div class="chip" data-val="chat">Coffee Chats</div>
+        <div class="chip" data-val="sweet">Sweet Treats</div>
+        <div class="chip" data-val="social">Hang & Vibe</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Fine-tune vibe</label>
+      <div class="slider-row">
+        <input type="range" id="vibe" min="0" max="10" step="0.5" value="5">
+      </div>
+      <div class="slider-labels">
+        <span>Cozy & quiet</span>
+        <span>Lively & popular</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Minimum rating</label>
+      <div class="chips" id="ratingChips">
+        <div class="chip" data-val="0">Any</div>
+        <div class="chip" data-val="4.0">4.0+</div>
+        <div class="chip active" data-val="4.5">4.5+</div>
+        <div class="chip" data-val="4.8">4.8+</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Price</label>
+      <div class="chips" id="priceChips">
+        <div class="chip active" data-val="any">Any</div>
+        <div class="chip" data-val="1">$</div>
+        <div class="chip" data-val="2">$$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-head">
+    <h2>Recommended for you</h2>
+    <div class="count" id="resultCount"></div>
+  </div>
+
+  <div id="results"></div>
+
+  <footer>
+    Data pulled via Google Places API, cleaned and cross-checked for accurate neighborhood tagging. Coziness/liveliness is a calculated proxy from review volume distribution, not review sentiment analysis. Part of a market density &amp; demand analysis project across Gwinnett County and Atlanta.
+  </footer>
+
+</div>
+
+<script>
+const DATA = [{"name": "Hayat Coffee Co", "address": "2870 Peachtree Industrial Blvd Suite G, Duluth, GA 30097, USA", "lat": 34.0221777, "lng": -84.1496374, "rating": 4.8, "reviews": 202, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Break Coffee Roasters", "address": "3122 Hill St NW, Duluth, GA 30096, USA", "lat": 34.0033586, "lng": -84.1458303, "rating": 4.6, "reviews": 306, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Alchemist On the Divide", "address": "3550 W Lawrenceville St Ste 220, Duluth, GA 30096, USA", "lat": 34.0037184, "lng": -84.1449721, "rating": 4.7, "reviews": 137, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Forest Cafe", "address": "3780 Old Norcross Rd STE109, Duluth, GA 30096, USA", "lat": 33.9612907, "lng": -84.1442545, "rating": 4.8, "reviews": 353, "price": 1, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Cafe Flat", "address": "2227 Duluth Hwy #109, Duluth, GA 30097, USA", "lat": 33.9773602, "lng": -84.0994263, "rating": 4.8, "reviews": 296, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Land of a Thousand Hills Coffee", "address": "3176 Main St Ste 200, Duluth, GA 30096, USA", "lat": 34.001442, "lng": -84.1463605, "rating": 4.8, "reviews": 138, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Cafe Rothem \uce74\ud398 \ub85c\ub380", "address": "3585 Peachtree Industrial Blvd #128, Duluth, GA 30096, USA", "lat": 34.0004547, "lng": -84.1697446, "rating": 4.8, "reviews": 383, "price": 1, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.5, "lively": 0.5}, {"name": "Alchemist Trading Co.", "address": "9700 Medlock Bridge Rd #138, Johns Creek, GA 30022, USA", "lat": 34.0169678, "lng": -84.1931151, "rating": 4.6, "reviews": 632, "price": 1, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.2, "lively": 0.8}, {"name": "TwoHa's Cafe", "address": "2645 N Berkeley Lake Rd NW Ste 231, Duluth, GA 30096, USA", "lat": 33.9751093, "lng": -84.1577602, "rating": 4.2, "reviews": 567, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.3, "lively": 0.7}, {"name": "Coffee That Matters by Phoenix Roasters", "address": "2640 Old Peachtree Rd NW C, Duluth, GA 30097, USA", "lat": 34.0077366, "lng": -84.128918, "rating": 4.7, "reviews": 224, "price": 1, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "Blue Mountain Coffee Roasters", "address": "2815 Lawrenceville-Suwanee Rd Ste 400, Suwanee, GA 30024, USA", "lat": 34.0249376, "lng": -84.0437636, "rating": 4.7, "reviews": 493, "price": 1, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.4, "lively": 0.6}, {"name": "Cafe Blue", "address": "2005 Boggs Rd Ste 100, Duluth, GA 30096, USA", "lat": 33.9698869, "lng": -84.0969434, "rating": 4.6, "reviews": 725, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.1, "lively": 0.9}, {"name": "GONGGAN ATL", "address": "2645 N Berkeley Lake Rd NW Ste 109 & 110, Duluth, GA 30096, USA", "lat": 33.9756312, "lng": -84.1602195, "rating": 4.4, "reviews": 86, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.9, "lively": 0.1}, {"name": "Yibna Caf\u00e9", "address": "3700 Crestwood Pkwy NW Ll25, Duluth, GA 30096, USA", "lat": 33.9456608, "lng": -84.1280239, "rating": 5.0, "reviews": 542, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.3, "lively": 0.7}, {"name": "Divine Coffee", "address": "7725 McGinnis Ferry Rd, Johns Creek, GA 30024, USA", "lat": 34.0556417, "lng": -84.1311151, "rating": 4.4, "reviews": 796, "price": 2, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.0, "lively": 1.0}, {"name": "Qamaria Yemeni Coffee Co.", "address": "2645 N Berkeley Lake Rd NW Ste 221, Duluth, GA 30096, USA", "lat": 33.9758157, "lng": -84.1593789, "rating": 4.5, "reviews": 215, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "Wise Coffee", "address": "1095 Old Peachtree Rd NW #100, Suwanee, GA 30024, USA", "lat": 34.0023694, "lng": -84.0757681, "rating": 4.8, "reviews": 193, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Tom N Toms Black Duluth", "address": "3473 Old Norcross Rd #100a, Duluth, GA 30096, USA", "lat": 33.9661121, "lng": -84.1344693, "rating": 4.6, "reviews": 345, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Cafe SeeSaw", "address": "2870 Lawrenceville-Suwanee Rd c1, Suwanee, GA 30024, USA", "lat": 34.0244689, "lng": -84.0454308, "rating": 4.7, "reviews": 319, "price": null, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Paris Baguette", "address": "1290 Old Peachtree Rd NW, Duluth, GA 30097, USA", "lat": 34.0039032, "lng": -84.0854778, "rating": 4.7, "reviews": 407, "price": 2, "neighborhood": "Duluth", "region": "Gwinnett", "coziness": 9.5, "lively": 0.5}, {"name": "CafeFoam", "address": "7788 McGinnis Ferry Rd, Suwanee, GA 30024, USA", "lat": 34.0567186, "lng": -84.1286272, "rating": 4.9, "reviews": 166, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Awake Coffee Company", "address": "3265 Lawrenceville-Suwanee Rd Ste 3C, Suwanee, GA 30024, USA", "lat": 34.0383378, "lng": -84.0478511, "rating": 4.9, "reviews": 149, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Orange Coffee suwanee", "address": "3890 Lawrenceville-Suwanee Rd, Suwanee, GA 30024, USA", "lat": 34.0555522, "lng": -84.0617596, "rating": 4.8, "reviews": 45, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 10.0, "lively": 0.0}, {"name": "Zoom Coffee Roasters", "address": "960 Scales Rd Ste 110, Suwanee, GA 30024, USA", "lat": 34.0456314, "lng": -84.0833387, "rating": 4.9, "reviews": 265, "price": 1, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "Cafe Amico", "address": "320 Town Center Ave #9A, Suwanee, GA 30024, USA", "lat": 34.0557606, "lng": -84.0631983, "rating": 4.5, "reviews": 565, "price": 1, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.3, "lively": 0.7}, {"name": "Tada Coffee and Dessert", "address": "3463 Lawrenceville-Suwanee Rd #117 Suwanee, GA 30024, USA", "lat": 34.0433334, "lng": -84.0538136, "rating": 4.8, "reviews": 261, "price": 1, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "Caff\u00e8 Bean", "address": "3131 Lawrenceville-Suwanee Rd, Suwanee, GA 30024, USA", "lat": 34.0350559, "lng": -84.0504326, "rating": 4.3, "reviews": 741, "price": 1, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.0, "lively": 1.0}, {"name": "Bread and Butter Coffee", "address": "115 E Main St NE A1, Buford, GA 30518, USA", "lat": 34.1214246, "lng": -84.003563, "rating": 4.7, "reviews": 41, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 10.0, "lively": 0.0}, {"name": "Gold N' Bean (Inside Read it Again Bookstore)", "address": "3630 Peachtree Pkwy, Suwanee, GA 30024, USA", "lat": 34.071883, "lng": -84.168513, "rating": 5.0, "reviews": 20, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 10.0, "lively": 0.0}, {"name": "Cips Coffee Roasters", "address": "2780 W Village Dr Ste B, Suwanee, GA 30024, USA", "lat": 34.0923118, "lng": -84.1697616, "rating": 4.6, "reviews": 234, "price": 1, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "Warm Waves Coffee Roasters", "address": "500 Buford Hwy, Suwanee, GA 30024, USA", "lat": 34.0530675, "lng": -84.0689184, "rating": 4.7, "reviews": 122, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.9, "lively": 0.1}, {"name": "La Ca Vietnamese Coffee House", "address": "3370 Lawrenceville-Suwanee Rd Ste 100, Suwanee, GA 30024, USA", "lat": 34.0403407, "lng": -84.0542185, "rating": 4.8, "reviews": 51, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 10.0, "lively": 0.0}, {"name": "Good Coffee Bike Shop", "address": "3947 Lawrenceville-Suwanee Rd Ste B, Suwanee, GA 30024, USA", "lat": 34.0571207, "lng": -84.0621869, "rating": 4.9, "reviews": 144, "price": null, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Greatea Suwanee", "address": "3930 Charleston Market St NW b 04, Suwanee, GA 30024, USA", "lat": 34.0548294, "lng": -84.0645051, "rating": 4.9, "reviews": 314, "price": 1, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Cafe Mixx", "address": "2925 Lawrenceville-Suwanee Rd, Suwanee, GA 30024, USA", "lat": 34.0281072, "lng": -84.0456286, "rating": 4.5, "reviews": 519, "price": 2, "neighborhood": "Suwanee", "region": "Gwinnett", "coziness": 9.3, "lively": 0.7}, {"name": "45 South Cafe", "address": "45 S Peachtree St, Norcross, GA 30071, USA", "lat": 33.941663, "lng": -84.2131, "rating": 4.5, "reviews": 726, "price": 1, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.1, "lively": 0.9}, {"name": "Refuge Coffee Co. Norcross", "address": "127 S Peachtree St Ste C, Norcross, GA 30071, USA", "lat": 33.9405226, "lng": -84.2138319, "rating": 4.6, "reviews": 95, "price": 1, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.9, "lively": 0.1}, {"name": "SANYOS COFFEE", "address": "6409 Jimmy Carter Blvd Ste 400, Norcross, GA 30071, USA", "lat": 33.9336199, "lng": -84.2224264, "rating": 4.6, "reviews": 270, "price": 2, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "U&ME coffee bakery and wine", "address": "3425 Medlock Bridge Rd site 400b, Peachtree Corners, GA 30092, USA", "lat": 33.969134, "lng": -84.2085997, "rating": 4.8, "reviews": 282, "price": null, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Refuge Coffee Co. Clarkston", "address": "4170 E Ponce de Leon Ave NE, Clarkston, GA 30021, USA", "lat": 33.8094672, "lng": -84.240392, "rating": 4.8, "reviews": 876, "price": 1, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 8.9, "lively": 1.1}, {"name": "Common Coffee & Cocktails", "address": "5677 Buford Hwy NE Ste 101, Doraville, GA 30340, USA", "lat": 33.9056111, "lng": -84.2699204, "rating": 4.3, "reviews": 141, "price": null, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Sequel Coffee Co.", "address": "3847 Medlock Bridge Rd Suite 120, Peachtree Corners, GA 30092, USA", "lat": 33.9815654, "lng": -84.2131851, "rating": 4.7, "reviews": 149, "price": null, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "Sip It!", "address": "4015 Holcomb Bridge Rd #340, Norcross, GA 30092, USA", "lat": 33.9657472, "lng": -84.2566266, "rating": 5.0, "reviews": 43, "price": null, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 10.0, "lively": 0.0}, {"name": "Henri's Bakery & Deli", "address": "5005 Peachtree Pkwy NW Ste 820, Peachtree Corners, GA 30092, USA", "lat": 33.9864414, "lng": -84.2126356, "rating": 4.6, "reviews": 456, "price": 1, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.4, "lively": 0.6}, {"name": "Ground & Pound Coffee", "address": "8420 Holcomb Bridge Rd Ste 220, Alpharetta, GA 30022, USA", "lat": 33.9854963, "lng": -84.2704267, "rating": 4.8, "reviews": 547, "price": null, "neighborhood": "Norcross", "region": "Gwinnett", "coziness": 9.3, "lively": 0.7}, {"name": "Break Coffee Roasters", "address": "235 N Perry St, Lawrenceville, GA 30046, USA", "lat": 33.9577728, "lng": -83.9898902, "rating": 4.5, "reviews": 226, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "Boulder Creek Coffee", "address": "233 E Crogan St, Lawrenceville, GA 30046, USA", "lat": 33.9566793, "lng": -83.9869963, "rating": 4.4, "reviews": 1151, "price": 1, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 8.5, "lively": 1.5}, {"name": "Cafe N Chill", "address": "100 Hurricane Shoals Rd NW D, Lawrenceville, GA 30046, USA", "lat": 33.9690735, "lng": -83.9943231, "rating": 5.0, "reviews": 25, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 10.0, "lively": 0.0}, {"name": "Reyna's Espresso & Sweets", "address": "137 W Crogan St, Lawrenceville, GA 30046, USA", "lat": 33.9561553, "lng": -83.988828, "rating": 4.5, "reviews": 355, "price": 1, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.5, "lively": 0.5}, {"name": "Mood Cafe", "address": "2300 Margot St, Lawrenceville, GA 30043, USA", "lat": 34.0305235, "lng": -83.9868636, "rating": 4.8, "reviews": 231, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.7, "lively": 0.3}, {"name": "Beans and Butter Coffeehouse", "address": "River Oak Plaza, 851 Oak Rd SW #1, Lawrenceville, GA 30044, USA", "lat": 33.8877541, "lng": -84.0628365, "rating": 4.8, "reviews": 452, "price": 1, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.4, "lively": 0.6}, {"name": "TradeWind Coffee Co.", "address": "2300 Liam Ave NE #200, Dacula, GA 30019, USA", "lat": 34.0044444, "lng": -83.9144444, "rating": 4.6, "reviews": 721, "price": 1, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.1, "lively": 0.9}, {"name": "Chibo-Ethiopian Coffee & Kitchen", "address": "3035 Five Forks Trickum Rd SW Ste 4C, Lilburn, GA 30047, USA", "lat": 33.8861087, "lng": -84.0615667, "rating": 5.0, "reviews": 422, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.5, "lively": 0.5}, {"name": "Brewed Up Coffee & CoWorking", "address": "4805 Lawrenceville Hwy STE 320A, Lilburn, GA 30047, USA", "lat": 33.8964218, "lng": -84.1423616, "rating": 4.9, "reviews": 136, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.8, "lively": 0.2}, {"name": "7 Brew Coffee", "address": "1073 Scenic Hwy S, Lawrenceville, GA 30045, USA", "lat": 33.908292, "lng": -84.003567, "rating": 4.5, "reviews": 90, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.9, "lively": 0.1}, {"name": "Aroma Cafe", "address": "198 Gwinnett Dr, Lawrenceville, GA 30046, USA", "lat": 33.9438635, "lng": -83.9927565, "rating": 4.2, "reviews": 121, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.9, "lively": 0.1}, {"name": "Grayson Sweet Home Cafe", "address": "502 Grayson Pkwy, Grayson, GA 30017, USA", "lat": 33.8924526, "lng": -83.9589592, "rating": 4.6, "reviews": 793, "price": 1, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.0, "lively": 1.0}, {"name": "Sunflour Dessert & Coffee", "address": "1956 Duluth Hwy b105, Lawrenceville, GA 30043, USA", "lat": 33.9764451, "lng": -84.081912, "rating": 4.7, "reviews": 304, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.6, "lively": 0.4}, {"name": "Andinos food and bakery atl", "address": "450 Hurricane Shoals Rd NW Ste 1, Lawrenceville, GA 30046, USA", "lat": 33.9661122, "lng": -84.0065175, "rating": 4.9, "reviews": 89, "price": null, "neighborhood": "Lawrenceville", "region": "Gwinnett", "coziness": 9.9, "lively": 0.1}, {"name": "Spiller Park Coffee \"SP2\"", "address": "Toco Hill Shopping Center, 2929 N Druid Hills Rd, Atlanta, GA 30329, USA", "lat": 33.815326, "lng": -84.311954, "rating": 4.3, "reviews": 667, "price": 2, "neighborhood": "Druid Hills", "region": "Atlanta", "coziness": 9.1, "lively": 0.9}, {"name": "Prevail Union | NDH", "address": "2490 N Druid Hills Rd NE, Atlanta, GA 30329, USA", "lat": 33.8260815, "lng": -84.3232397, "rating": 4.0, "reviews": 143, "price": null, "neighborhood": "Druid Hills", "region": "Atlanta", "coziness": 9.8, "lively": 0.2}, {"name": "Summit Coffee Emory Village", "address": "1565 N Decatur Rd, Atlanta, GA 30307, USA", "lat": 33.7878376, "lng": -84.3264504, "rating": 4.6, "reviews": 83, "price": null, "neighborhood": "Emory Village", "region": "Atlanta", "coziness": 9.9, "lively": 0.1}, {"name": "Golden Drops Caf\u00e9", "address": "1788 Clairmont Rd, Decatur, GA 30033, USA", "lat": 33.8062054, "lng": -84.3107416, "rating": 4.6, "reviews": 684, "price": 1, "neighborhood": "Druid Hills", "region": "Atlanta", "coziness": 9.1, "lively": 0.9}, {"name": "Coffee Therapy", "address": "3145 Briarcliff Rd NE, Atlanta, GA 30329, USA", "lat": 33.837232, "lng": -84.3097577, "rating": 4.4, "reviews": 401, "price": 2, "neighborhood": "Druid Hills", "region": "Atlanta", "coziness": 9.5, "lively": 0.5}, {"name": "Drip", "address": "928 Garrett St B, Atlanta, GA 30316, USA", "lat": 33.7406691, "lng": -84.3572454, "rating": 4.6, "reviews": 548, "price": 1, "neighborhood": "Cabbagetown", "region": "Atlanta", "coziness": 9.3, "lively": 0.7}, {"name": "Waller's Coffee Shop", "address": "240 Dekalb Industrial Way, Decatur, GA 30033, USA", "lat": 33.7822693, "lng": -84.2755868, "rating": 4.8, "reviews": 630, "price": 1, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.2, "lively": 0.8}, {"name": "Taproom Coffee", "address": "1963 Hosea L Williams Dr SE R106, Atlanta, GA 30317, USA", "lat": 33.7515784, "lng": -84.3232086, "rating": 4.7, "reviews": 611, "price": 1, "neighborhood": "Kirkwood/East Lake", "region": "Atlanta", "coziness": 9.2, "lively": 0.8}, {"name": "Bellwood Coffee - Decatur", "address": "133 E Court Square, Decatur, GA 30030, USA", "lat": 33.7753627, "lng": -84.2957261, "rating": 4.4, "reviews": 57, "price": null, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.9, "lively": 0.1}, {"name": "Urban Grind BrewBox", "address": "352 University Ave SW, Atlanta, GA 30310, USA", "lat": 33.7208199, "lng": -84.4008806, "rating": 4.9, "reviews": 35, "price": null, "neighborhood": "West End", "region": "Atlanta", "coziness": 10.0, "lively": 0.0}, {"name": "Foxtail Coffee - Hanover Edgewood", "address": "285 Mayson Ave NE Ste 3, Atlanta, GA 30307, USA", "lat": 33.760724, "lng": -84.3378591, "rating": 4.5, "reviews": 15, "price": null, "neighborhood": "Old Fourth Ward", "region": "Atlanta", "coziness": 10.0, "lively": 0.0}, {"name": "Bellwood Coffee - EAV", "address": "1336 Glenwood Ave SE, Atlanta, GA 30316, USA", "lat": 33.7403862, "lng": -84.3437908, "rating": 4.7, "reviews": 279, "price": null, "neighborhood": "East Atlanta Village", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "Atlanta Coffee Roasters", "address": "2205 Lavista Rd, Atlanta, GA 30329, USA", "lat": 33.8158247, "lng": -84.3130425, "rating": 4.3, "reviews": 94, "price": null, "neighborhood": "Druid Hills", "region": "Atlanta", "coziness": 9.9, "lively": 0.1}, {"name": "Land of a Thousand Hills Coffee", "address": "1140 Spring St NW Ste 140, Atlanta, GA 30309, USA", "lat": 33.7855631, "lng": -84.3894363, "rating": 4.5, "reviews": 146, "price": 2, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.8, "lively": 0.2}, {"name": "Depot by Kaldi's Coffee", "address": "1 Eagle Row, Atlanta, GA 30322, USA", "lat": 33.7952441, "lng": -84.3230439, "rating": 4.2, "reviews": 375, "price": 2, "neighborhood": "Emory Village", "region": "Atlanta", "coziness": 9.5, "lively": 0.5}, {"name": "Con Leche Coffee", "address": "181 Flat Shoals Ave SE Unit 1, Atlanta, GA 30316, USA", "lat": 33.748719, "lng": -84.3528528, "rating": 4.8, "reviews": 298, "price": 1, "neighborhood": "East Atlanta Village", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "PERC", "address": "2380 Hosea L Williams Dr NE, Atlanta, GA 30317, USA", "lat": 33.7512893, "lng": -84.3093726, "rating": 4.5, "reviews": 493, "price": null, "neighborhood": "Kirkwood/East Lake", "region": "Atlanta", "coziness": 9.4, "lively": 0.6}, {"name": "Foxtail Coffee - Midtown", "address": "1230 W Peachtree St NW Unit 120, Atlanta, GA 30309, USA", "lat": 33.7883783, "lng": -84.3879661, "rating": 4.6, "reviews": 646, "price": 2, "neighborhood": "Druid Hills", "region": "Atlanta", "coziness": 9.2, "lively": 0.8}, {"name": "Academy Coffee", "address": "1019 Virginia Ave NE, Atlanta, GA 30306, USA", "lat": 33.7823183, "lng": -84.3539111, "rating": 4.7, "reviews": 332, "price": 1, "neighborhood": "Virginia-Highland", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "Opo Coffee", "address": "314 E Howard Ave, Decatur, GA 30030, USA", "lat": 33.772049, "lng": -84.2921318, "rating": 4.7, "reviews": 329, "price": null, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "The Reading Room", "address": "429 Church St, Decatur, GA 30030, USA", "lat": 33.7751436, "lng": -84.2947751, "rating": 4.2, "reviews": 368, "price": null, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.5, "lively": 0.5}, {"name": "Foxtail Coffee - Decatur", "address": "101 W Ponce de Leon Ave Ste 110-AX, Decatur, GA 30030, USA", "lat": 33.7758197, "lng": -84.2966966, "rating": 4.7, "reviews": 187, "price": null, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.8, "lively": 0.2}, {"name": "Dancing Goats Decatur", "address": "419 W Ponce de Leon Ave, Decatur, GA 30030, USA", "lat": 33.775928, "lng": -84.3032548, "rating": 4.5, "reviews": 1220, "price": 1, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 8.4, "lively": 1.6}, {"name": "Oakview Coffee", "address": "707 East Lake Dr B, Decatur, GA 30030, USA", "lat": 33.7591531, "lng": -84.3032874, "rating": 4.4, "reviews": 453, "price": 1, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.4, "lively": 0.6}, {"name": "The Corner Cup Coffee", "address": "2625 Lawrenceville Hwy, Decatur, GA 30033, USA", "lat": 33.8226237, "lng": -84.2617656, "rating": 4.8, "reviews": 633, "price": 1, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.2, "lively": 0.8}, {"name": "Wonderful World Coffee and Tea", "address": "6 Olive St, Avondale Estates, GA 30002, USA", "lat": 33.7759439, "lng": -84.2735812, "rating": 4.5, "reviews": 131, "price": null, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.8, "lively": 0.2}, {"name": "Banjo Coffee", "address": "38 N Avondale Rd, Avondale Estates, GA 30002, USA", "lat": 33.7758424, "lng": -84.2712806, "rating": 4.7, "reviews": 716, "price": 1, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.1, "lively": 0.9}, {"name": "Rebel Teahouse | Decatur, GA", "address": "225 E Ponce de Leon Ave Apt 110, Decatur, GA 30030, USA", "lat": 33.775404, "lng": -84.2943574, "rating": 4.8, "reviews": 979, "price": 2, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 8.7, "lively": 1.3}, {"name": "B-Addition Cafe & Bar", "address": "3711 N Decatur Rd, Decatur, GA 30032, USA", "lat": 33.7852637, "lng": -84.2430676, "rating": 4.9, "reviews": 67, "price": null, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.9, "lively": 0.1}, {"name": "Harbor Coffee", "address": "331 Elizabeth St NE Ste c, Atlanta, GA 30307, USA", "lat": 33.763517, "lng": -84.3585298, "rating": 4.7, "reviews": 210, "price": null, "neighborhood": "Inman Park", "region": "Atlanta", "coziness": 9.7, "lively": 0.3}, {"name": "Daily Dose Coffee", "address": "907 Memorial Dr SE Ste 112, Atlanta, GA 30316, USA", "lat": 33.7457325, "lng": -84.3579467, "rating": 4.5, "reviews": 331, "price": 1, "neighborhood": "Decatur", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "Foxtail Coffee - Society Atlanta", "address": "811 Peachtree St NE Unit 5, Atlanta, GA 30308, USA", "lat": 33.7768995, "lng": -84.3836093, "rating": 4.9, "reviews": 87, "price": null, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.9, "lively": 0.1}, {"name": "Caf\u00e9 Intermezzo - Midtown", "address": "1065 Peachtree St NE, Atlanta, GA 30309, USA", "lat": 33.7832619, "lng": -84.3836706, "rating": 4.5, "reviews": 6017, "price": 2, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 2.0, "lively": 8.0}, {"name": "Dancing Goats Midtown", "address": "33 Peachtree Pl NE, Atlanta, GA 30309, USA", "lat": 33.7804277, "lng": -84.3868304, "rating": 4.5, "reviews": 1020, "price": 2, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 8.7, "lively": 1.3}, {"name": "For Five Coffee Atlanta", "address": "1105 W Peachtree St NW, Atlanta, GA 30309, USA", "lat": 33.7846332, "lng": -84.3876815, "rating": 4.3, "reviews": 348, "price": 2, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "Apotheos Coffee Midtown", "address": "740 W Peachtree St NW, Atlanta, GA 30308, USA", "lat": 33.7749224, "lng": -84.3876342, "rating": 4.6, "reviews": 130, "price": null, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.8, "lively": 0.2}, {"name": "El Vi\u00f1edo Local", "address": "730 Peachtree St NE Ste 100, Atlanta, GA 30308, USA", "lat": 33.7743893, "lng": -84.3849071, "rating": 4.9, "reviews": 7531, "price": 2, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 0.0, "lively": 10.0}, {"name": "Refuge Coffee Co. Midtown", "address": "1280 Peachtree St NE Ste 100-A, Atlanta, GA 30309, USA", "lat": 33.7896022, "lng": -84.3848271, "rating": 4.6, "reviews": 173, "price": 1, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.8, "lively": 0.2}, {"name": "Amistad Coffee", "address": "1270 W Peachtree St NW, Atlanta, GA 30309, USA", "lat": 33.7892878, "lng": -84.3882075, "rating": 4.8, "reviews": 57, "price": null, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.9, "lively": 0.1}, {"name": "Sch\u0101f Shop", "address": "905 Juniper St NE, Atlanta, GA 30309, USA", "lat": 33.7791521, "lng": -84.3825595, "rating": 4.8, "reviews": 135, "price": null, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.8, "lively": 0.2}, {"name": "Haraz Coffee House", "address": "930 Spring St NW Suite 5, Atlanta, GA 30309, USA", "lat": 33.7804038, "lng": -84.3891702, "rating": 4.7, "reviews": 226, "price": null, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.7, "lively": 0.3}, {"name": "Prevail Union | ATL", "address": "1050 Howell Mill Rd NW, Atlanta, GA 30318, USA", "lat": 33.7831238, "lng": -84.4130648, "rating": 4.5, "reviews": 203, "price": 1, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.7, "lively": 0.3}, {"name": "Sweet Hut Bakery & Cafe", "address": "935 Peachtree St NE Unit 935, Atlanta, GA 30309, USA", "lat": 33.7802021, "lng": -84.3839385, "rating": 4.5, "reviews": 3160, "price": 1, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 5.8, "lively": 4.2}, {"name": "Urban Grind", "address": "962 Marietta St NW, Atlanta, GA 30318, USA", "lat": 33.7774314, "lng": -84.4088155, "rating": 4.5, "reviews": 699, "price": 1, "neighborhood": "West Midtown", "region": "Atlanta", "coziness": 9.1, "lively": 0.9}, {"name": "Bloom Coffee Co.", "address": "2025 Peachtree Rd NW, Atlanta, GA 30309, USA", "lat": 33.8095955, "lng": -84.3916768, "rating": 4.6, "reviews": 358, "price": 1, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.5, "lively": 0.5}, {"name": "Land of a Thousand Hills Coffee", "address": "715 Peachtree St NE #101, Atlanta, GA 30308, USA", "lat": 33.7740592, "lng": -84.3844903, "rating": 4.3, "reviews": 309, "price": 1, "neighborhood": "Midtown", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "Chrome Yellow", "address": "501 Edgewood Ave SE, Atlanta, GA 30312, USA", "lat": 33.7539267, "lng": -84.371011, "rating": 4.7, "reviews": 929, "price": 2, "neighborhood": "Old Fourth Ward", "region": "Atlanta", "coziness": 8.8, "lively": 1.2}, {"name": "Aurora Coffee", "address": "468 Moreland Ave NE, Atlanta, GA 30307, USA", "lat": 33.766996, "lng": -84.349463, "rating": 4.6, "reviews": 619, "price": 1, "neighborhood": "Emory Village", "region": "Atlanta", "coziness": 9.2, "lively": 0.8}, {"name": "East Pole Coffee Co", "address": "676 N Highland Ave NE, Atlanta, GA 30306, USA", "lat": 33.772843, "lng": -84.3527776, "rating": 4.6, "reviews": 203, "price": null, "neighborhood": "Emory Village", "region": "Atlanta", "coziness": 9.7, "lively": 0.3}, {"name": "East Pole Coffee Co.", "address": "255 Ottley Dr NE #105, Atlanta, GA 30324, USA", "lat": 33.8108168, "lng": -84.378806, "rating": 4.5, "reviews": 616, "price": 1, "neighborhood": "Emory Village", "region": "Atlanta", "coziness": 9.2, "lively": 0.8}, {"name": "PERC Coffee", "address": "1046 N Highland Ave NE, Atlanta, GA 30306, USA", "lat": 33.7831963, "lng": -84.3547389, "rating": 4.5, "reviews": 252, "price": null, "neighborhood": "Emory Village", "region": "Atlanta", "coziness": 9.7, "lively": 0.3}, {"name": "Ash Coffee", "address": "1189 Virginia Ave NE, Atlanta, GA 30306, USA", "lat": 33.7798835, "lng": -84.3491379, "rating": 4.6, "reviews": 281, "price": null, "neighborhood": "Emory Village", "region": "Atlanta", "coziness": 9.6, "lively": 0.4}, {"name": "Black Coffee Atlanta", "address": "1800 Jonesboro Rd SE Ste C, Atlanta, GA 30315, USA", "lat": 33.7047782, "lng": -84.3775735, "rating": 4.9, "reviews": 1372, "price": 2, "neighborhood": "West Midtown", "region": "Atlanta", "coziness": 8.2, "lively": 1.8}, {"name": "Blue Donkey Coffee Co.", "address": "Price Gilbert Memorial Library, 704 Cherry St NW, Atlanta, GA 30332, USA", "lat": 33.7743506, "lng": -84.395619, "rating": 4.2, "reviews": 234, "price": null, "neighborhood": "West Midtown", "region": "Atlanta", "coziness": 9.7, "lively": 0.3}, {"name": "E+ROSE Wellness Cafe - Westside Provisions Atlanta", "address": "1100 Howell Mill Rd NW A05, Atlanta, GA 30318, USA", "lat": 33.7847648, "lng": -84.4122192, "rating": 4.8, "reviews": 864, "price": null, "neighborhood": "West Midtown", "region": "Atlanta", "coziness": 8.9, "lively": 1.1}, {"name": "Chattahoochee Coffee Company - Westside", "address": "790 Huff Rd NW, Atlanta, GA 30318, USA", "lat": 33.7868304, "lng": -84.4139145, "rating": 4.5, "reviews": 451, "price": 1, "neighborhood": "West Midtown", "region": "Atlanta", "coziness": 9.4, "lively": 0.6}, {"name": "BRASH Coffee", "address": "1168 Howell Ml Rd Unit 0516, Atlanta, GA 30318, USA", "lat": 33.7855525, "lng": -84.4119485, "rating": 4.4, "reviews": 517, "price": 1, "neighborhood": "West Midtown", "region": "Atlanta", "coziness": 9.3, "lively": 0.7}];
+
+let state = { region:'all', neighborhood:'all', vibe:5, minRating:4.5, price:'any', landmark:'none', userLat:null, userLng:null, category:'all' };
+
+const SWEET_REGEX = /bakery|dessert|pastry|sweet|donut|cake|bread|tea|ice cream|bagel/i;
+
+function categoryFor(cafe){
+  if(SWEET_REGEX.test(cafe.name)) return 'sweet';
+  if(cafe.coziness >= 8.5 && cafe.rating >= 4.5) return 'study';
+  if(cafe.rating >= 4.6 && cafe.lively >= 1.5 && cafe.lively <= 5.5) return 'chat';
+  if(cafe.lively >= 3.5) return 'social';
+  return 'study'; // default fallback for quiet, undercategorized spots
+}
+
+function categoryScore(cafe, target){
+  const actual = categoryFor(cafe);
+  if(target==='all') return 0;
+  if(actual===target) return 10;
+  // partial credit for adjacent categories
+  if(target==='study' && cafe.coziness >= 7) return 5;
+  if(target==='chat' && cafe.rating >= 4.5) return 4;
+  if(target==='social' && cafe.lively >= 2) return 4;
+  return 0;
+}
+const LANDMARKS = {
+  gt: { lat: 33.7756, lng: -84.3963, label: 'Georgia Tech' },
+  emory: { lat: 33.7925, lng: -84.3238, label: 'Emory University' },
+  duluth: { lat: 34.0029, lng: -84.1446, label: 'Duluth' },
+};
+
+function distMiles(lat1, lng1, lat2, lng2){
+  const R = 3958.8;
+  const dLat = (lat2-lat1) * Math.PI/180;
+  const dLng = (lng2-lng1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function currentAnchor(){
+  if(state.landmark==='me' && state.userLat!=null) return {lat:state.userLat, lng:state.userLng};
+  if(LANDMARKS[state.landmark]) return LANDMARKS[state.landmark];
+  return null;
+}
+
+function neighborhoodsFor(region){
+  const set = new Set();
+  DATA.forEach(c => { if(region==='all' || c.region===region) set.add(c.neighborhood); });
+  return Array.from(set).sort();
+}
+
+function refreshNeighborhoodOptions(){
+  const sel = document.getElementById('neighborhood');
+  const current = sel.value;
+  sel.innerHTML = '<option value="all">Any neighborhood</option>';
+  neighborhoodsFor(state.region).forEach(n=>{
+    const opt = document.createElement('option');
+    opt.value = n; opt.textContent = n;
+    sel.appendChild(opt);
+  });
+  if(neighborhoodsFor(state.region).includes(current)){ sel.value = current; }
+  else { sel.value = 'all'; state.neighborhood='all'; }
+}
+
+function score(cafe){
+  // distance from desired vibe (0-10 scale, comparing to lively score)
+  const vibeDist = Math.abs(cafe.lively - state.vibe);
+  const vibeScore = 10 - vibeDist; // closer to desired vibe = higher
+  const ratingBoost = (cafe.rating - 4.0) * 4; // small nudge for quality
+  return vibeScore + ratingBoost;
+}
+
+function render(){
+  const region = state.region;
+  const neighborhood = state.neighborhood;
+  const minRating = state.minRating;
+  const price = state.price;
+
+  let filtered = DATA.filter(c=>{
+    if(region!=='all' && c.region!==region) return false;
+    if(neighborhood!=='all' && c.neighborhood!==neighborhood) return false;
+    if(c.rating < minRating) return false;
+    if(price!=='any'){
+      if(price==='1' && c.price!==1) return false;
+      if(price==='2' && c.price!==2) return false;
+    }
+    return true;
+  });
+
+  filtered.forEach(c=> {
+    c._score = score(c) + categoryScore(c, state.category);
+    c._category = categoryFor(c);
+  });
+
+  if(state.category !== 'all'){
+    filtered = filtered.filter(c => c._score > 0);
+  }
+
+  const anchor = currentAnchor();
+  if(anchor){
+    filtered.forEach(c=> c._dist = distMiles(anchor.lat, anchor.lng, c.lat, c.lng));
+  }
+
+  if(anchor){
+    filtered.sort((a,b)=> a._dist - b._dist);
+  } else {
+    filtered.sort((a,b)=> b._score - a._score);
+  }
+  filtered = filtered.slice(0,12);
+
+  document.getElementById('resultCount').textContent = filtered.length + ' match' + (filtered.length===1?'':'es');
+
+  const container = document.getElementById('results');
+  container.innerHTML = '';
+
+  if(filtered.length===0){
+    container.innerHTML = '<div class="empty">No cafes match those filters. Try widening your search.</div>';
+    return;
+  }
+
+  filtered.forEach(c=>{
+    const card = document.createElement('div');
+    card.className = 'card';
+    const CATEGORY_LABELS = {
+      study: { text: 'Study / Lock In', cls: 'cozy' },
+      chat: { text: 'Coffee Chats', cls: 'rating' },
+      sweet: { text: 'Sweet Treats', cls: 'lively' },
+      social: { text: 'Hang & Vibe', cls: 'lively' },
+    };
+    const catInfo = CATEGORY_LABELS[c._category] || CATEGORY_LABELS.study;
+    const vibeTag = `<span class="tag ${catInfo.cls}">${catInfo.text}</span>`;
+    const priceLabel = c.price ? '$'.repeat(c.price) : '';
+    const distLabel = c._dist!=null ? `${c._dist.toFixed(1)} mi away` : '';
+    card.innerHTML = `
+      <div class="card-left">
+        <p class="card-name">${c.name}</p>
+        <p class="card-meta">${c.neighborhood} · ${c.region}${priceLabel ? ' · '+priceLabel : ''} · ${c.reviews.toLocaleString()} reviews${distLabel ? ' · '+distLabel : ''}</p>
+        <div class="card-tags">
+          ${vibeTag}
+          <span class="tag rating">★ ${c.rating.toFixed(1)}</span>
+        </div>
+      </div>
+      <div class="card-right">
+        <div class="score">${anchor ? c._dist.toFixed(1) : c._score.toFixed(1)}</div>
+        <div class="score-label">${anchor ? 'miles' : 'match'}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+document.getElementById('region').addEventListener('change', e=>{
+  state.region = e.target.value;
+  refreshNeighborhoodOptions();
+  render();
+});
+document.getElementById('neighborhood').addEventListener('change', e=>{
+  state.neighborhood = e.target.value;
+  render();
+});
+document.getElementById('landmark').addEventListener('change', e=>{
+  state.landmark = e.target.value;
+  if(state.landmark === 'me'){
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        pos=>{
+          state.userLat = pos.coords.latitude;
+          state.userLng = pos.coords.longitude;
+          render();
+        },
+        err=>{
+          alert('Could not get your location. Try a specific landmark instead.');
+          state.landmark = 'none';
+          document.getElementById('landmark').value = 'none';
+          render();
+        }
+      );
+    } else {
+      alert('Location not supported in this browser.');
+      state.landmark = 'none';
+      e.target.value = 'none';
+    }
+  }
+  render();
+});
+document.getElementById('vibe').addEventListener('input', e=>{
+  state.vibe = parseFloat(e.target.value);
+  render();
+});
+document.querySelectorAll('#categoryChips .chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('#categoryChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    state.category = chip.dataset.val;
+    render();
+  });
+});
+document.querySelectorAll('#ratingChips .chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('#ratingChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    state.minRating = parseFloat(chip.dataset.val);
+    render();
+  });
+});
+document.querySelectorAll('#priceChips .chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    document.querySelectorAll('#priceChips .chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    state.price = chip.dataset.val;
+    render();
+  });
+});
+
+refreshNeighborhoodOptions();
+render();
+</script>
+</body>
+</html>
